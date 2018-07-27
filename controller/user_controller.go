@@ -2,16 +2,23 @@ package controller
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
 	"sigmadoc/service"
 )
 
-// GetUser gets an entity of user from the USER table
-func GetUser(w http.ResponseWriter, r *http.Request) {
-	json.NewEncoder(w).Encode(service.GetUser("demahom", "1234"))
-}
+// Login allows a user to authenticate
+func Login(w http.ResponseWriter, r *http.Request) {
+	perr := r.ParseForm()
+	if perr != nil {
+		log.Fatal(perr)
+	}
 
-// Authenticate allow user to authenticate
-func Authenticate(w http.ResponseWriter, r *http.Request) {
-	json.NewEncoder(w).Encode(service.Authenticate("Dem", "xxxx"))
+	resp, err := service.GetUserByUsernameAndPassword(r.FormValue("user_name"), r.FormValue("password"))
+
+	if resp.Data.IsEmpty() {
+		json.NewEncoder(w).Encode(err)
+	} else {
+		json.NewEncoder(w).Encode(resp)
+	}
 }

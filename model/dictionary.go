@@ -1,16 +1,16 @@
 package model
 
-import (
-	"net/http"
-)
-
 // Dictionary represents a table in the databse
 type Dictionary struct {
-	ID             int    `json:"id"`
-	Term           string `json:"term"`
-	Frequency      int    `json:"frequency"`
-	DocsReferences string `json:"docs_references"`
+	ID          int    `json:"id"`
+	Term        string `json:"term"`
+	Frequency   int    `json:"frequency"`
+	PostingList []int  `json:"posting_list"`
 }
 
-// FindTerm a term the Database
-func FindTerm(w http.ResponseWriter, r *http.Request) {}
+// PostingList representes the list of documents IDs
+// that contains a given term identified by DicID
+type PostingList struct {
+	DocID int `json:"doc_id"`
+	DicID int `json:"dic_id"`
+}
