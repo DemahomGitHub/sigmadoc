@@ -1,8 +1,7 @@
 package model
 
 import (
-	"fmt"
-	"net/http"
+	"strings"
 )
 
 // User represente an entity of USER in the database
@@ -12,8 +11,29 @@ type User struct {
 	Password string `json:"password"`
 }
 
-// GetUser gets an entity of user from the USER table
-func GetUser(w http.ResponseWriter, r *http.Request) {
-	user := User{Email: "demahom@mail.com", Username: "Dem", Password: "xxxxx"}
-	fmt.Println(w, user)
+// IsEmpty :
+func (user User) IsEmpty() bool {
+	return !(user.HasEmail() && user.HasPassword() && user.HasUsername())
+}
+
+// HasEmail :
+func (user User) HasEmail() bool {
+	return len(user.Email) > 0
+}
+
+// HasUsername :
+func (user User) HasUsername() bool {
+	return len(user.Username) > 0
+}
+
+// HasPassword :
+func (user User) HasPassword() bool {
+	return len(user.Password) > 0
+}
+
+// Equals :
+func (user User) Equals(u User) bool {
+	sameUsername := strings.Compare(user.Username, u.Username) == 0
+	samePassword := strings.Compare(user.Password, u.Password) == 0
+	return sameUsername && samePassword
 }
