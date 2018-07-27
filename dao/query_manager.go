@@ -8,7 +8,7 @@ const (
 	// MysqlDriver : name of the driver
 	MysqlDriver string = "mysql"
 	// MysqlDataSource : information about the database
-	MysqlDataSource string = "root:FHcc3Hjr@/sigmadoc"
+	MysqlDataSource string = "root:@/sigmadoc"
 )
 
 // GetQuery reads a SQL file and returns
