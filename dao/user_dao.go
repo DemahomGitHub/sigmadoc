@@ -20,8 +20,8 @@ func GetUserByUsernameAndPassword(username string, password string) (mdl.User, e
 	defer con.Close()
 
 	sql := prepareQuery()
-	u, e := executeQuery(con, sql, username)
-	return u, e
+	result, err := executeQuery(con, sql, username)
+	return result, err
 }
 
 func openConnection() *sql.DB {
