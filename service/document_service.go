@@ -5,7 +5,7 @@ import (
 	"sigmadoc/model"
 )
 
-// FindAllDocuments retreives all documents from the DB
-func FindAllDocuments() []model.Document {
-	return dao.FindAllDocuments()
+// CreateDocument retreives all documents from the DB
+func CreateDocument(doc model.Document) {
+	dao.CreateDocument(doc)
 }

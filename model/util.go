@@ -1,37 +1,26 @@
 package model
 
-import (
-	"strings"
+const (
+	// FAILED :
+	FAILED int = 400
+	// SUCCESS :
+	SUCCESS int = 200
 )
 
-// Response is a response from the DB
-type Response interface {
-	HasErrors() bool
-	ToJSON() string
+// ResponseMessage :
+type ResponseMessage struct {
+	Status       int      `json:"status"`
+	Message      string   `json:"message"`
+	UserResp     User     `json:"user_response"`
+	DoucmentResp Document `json:"document_response"`
 }
 
-// UserResponse :
-type UserResponse struct {
-	Status int
-	Data   User
+// AbstractCleaner :
+type AbstractCleaner interface {
+	Clean()
 }
 
-// DocumentResponse :
-type DocumentResponse struct {
-	Status int
-	Data   Document
-}
-
-// ErrorResponse :
-type ErrorResponse struct {
-	Status int
-	Info   string
-}
-
-// Str is string redefined
-type Str string
-
-// Equals compare 2 strings and returns 0 if they are equals
-func (a Str) Equals(b string) bool {
-	return strings.Compare(string(a), b) == 0
+// RemoveSpaces :
+func RemoveSpaces(o AbstractCleaner) {
+	o.Clean()
 }

@@ -1,0 +1,1 @@
+INSERT INTO DOCUMENT (doc_id, name, file_location, description) values (?, ?, ?, ?)

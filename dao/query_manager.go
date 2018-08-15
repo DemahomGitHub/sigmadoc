@@ -1,7 +1,12 @@
 package dao
 
 import (
+	"database/sql"
 	"io/ioutil"
+	"os"
+	errs "sigmadoc/errors"
+	// MySQL library for GO
+	_ "github.com/go-sql-driver/mysql"
 )
 
 const (
@@ -10,6 +15,22 @@ const (
 	// MysqlDataSource : information about the database
 	MysqlDataSource string = "root:@/sigmadoc"
 )
+
+// OpenDatabase :
+func OpenDatabase() *sql.DB {
+	db, err := sql.Open(MysqlDriver, MysqlDataSource)
+	errs.CheckError(err, "Enable to open a connection with the database")
+	return db
+}
+
+// PrepareQuery :
+func PrepareQuery(fileLocation string) string {
+	// Get working directory to find the sql file
+	wd, _ := os.Getwd()
+	sql, err := GetQuery(wd + fileLocation)
+	errs.CheckError(err, "Enable to read the file located at : "+fileLocation)
+	return sql
+}
 
 // GetQuery reads a SQL file and returns
 // the content of the file in a string format

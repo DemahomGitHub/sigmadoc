@@ -3,22 +3,12 @@ package main
 import (
 	"log"
 	"net/http"
-	"sigmadoc/controller"
-
-	"github.com/gorilla/mux"
+	"sigmadoc/routers"
 )
 
-var router *mux.Router
-
 func main() {
-	initRouter()
-	err := http.ListenAndServe(":3000", router)
+	err := http.ListenAndServe(":3000", routers.InitRoutes())
 	if err != nil {
 		log.Fatal(err)
 	}
-}
-
-func initRouter() {
-	router = mux.NewRouter()
-	router.HandleFunc("/login", controller.Login).Methods("POST")
 }

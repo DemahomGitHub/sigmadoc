@@ -1,12 +1,14 @@
 package controller
 
 import (
-	"encoding/json"
+	"log"
 	"net/http"
-	"sigmadoc/service"
 )
 
-// FindAllDocuments retreives all documents from the DB
-func FindAllDocuments(w http.ResponseWriter) {
-	json.NewEncoder(w).Encode(service.FindAllDocuments())
+// CreateDocument retreives all documents from the DB
+func CreateDocument(w http.ResponseWriter, r *http.Request) {
+	err := r.ParseForm()
+	if err != nil {
+		log.Println(err)
+	}
 }

@@ -31,9 +31,24 @@ func (user User) HasPassword() bool {
 	return len(user.Password) > 0
 }
 
-// Equals :
+// Equals compares the user name and password of 2 objects
 func (user User) Equals(u User) bool {
 	sameUsername := strings.Compare(user.Username, u.Username) == 0
 	samePassword := strings.Compare(user.Password, u.Password) == 0
 	return sameUsername && samePassword
+}
+
+// FullyEquals compare all the fields of 2 objects
+func (user User) FullyEquals(u User) bool {
+	sameUsername := strings.Compare(user.Username, u.Username) == 0
+	samePassword := strings.Compare(user.Password, u.Password) == 0
+	sameEmail := strings.Compare(user.Email, u.Email) == 0
+	return sameEmail && sameUsername && samePassword
+}
+
+// Clean removes all spaces in each field of a User object
+func (user *User) Clean() {
+	user.Email = strings.TrimSpace(user.Email)
+	user.Password = strings.TrimSpace(user.Password)
+	user.Username = strings.TrimSpace(user.Username)
 }
