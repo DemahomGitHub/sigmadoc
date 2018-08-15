@@ -3,7 +3,7 @@ package dao
 import (
 	"database/sql"
 	"log"
-	mdl "sigmadoc/model"
+	"sigmadoc/model"
 	"strings"
 
 	"golang.org/x/crypto/bcrypt"
@@ -14,65 +14,63 @@ const (
 	createUserFile string = "/sql/create_user.sql"
 )
 
+// UserImpl :
+type UserImpl model.User
+
 // GetUserByUsernameAndPassword gets a user instance from the database
-func GetUserByUsernameAndPassword(form mdl.User) (mdl.User, error) {
+func GetUserByUsernameAndPassword(form model.User) (model.User, error) {
 	db := OpenDatabase()
 	defer db.Close()
 
 	sql := PrepareQuery(getUserFile)
-	result, err := execGetUserQuery(db, sql, form.Username)
-	return result, err
+	usr := UserImpl(form)
+	err := Load(&usr, db, sql)
+	return model.User(usr), err
 }
-func execGetUserQuery(con *sql.DB, sqlQuery string, username string) (mdl.User, error) {
-	row := con.QueryRow(sqlQuery, username)
-	user := new(mdl.User)
+
+// Load is the implementation of a method in AbstractMapper interface
+func (user *UserImpl) Load(db *sql.DB, sqlQuery string) error {
+	row := db.QueryRow(sqlQuery, user.Username)
 	err := row.Scan(&user.Username, &user.Email, &user.Password)
-
 	if err != nil {
-		return *user, err
+		return err
 	}
-
-	return *user, nil
+	return nil
 }
 
 // CreateUser creates a new user
-func CreateUser(form mdl.User) {
+func CreateUser(form model.User) {
 	db := OpenDatabase()
 	defer db.Close()
 
-	sqlQuery := PrepareQuery(createUserFile)
-	_, err := execCreateUserQuery(db, sqlQuery, form)
+	query := PrepareQuery(createUserFile)
+	user := UserImpl(form)
+	err := Store(&user, db, query)
 
 	if err != nil {
 		log.Println("No user has been created")
 		log.Println(err)
 	}
 }
-func execCreateUserQuery(db *sql.DB, query string, form mdl.User) (sql.Result, error) {
-	stmt, err := db.Prepare(query)
 
+// Store is the implementation of the method in AbstractMapper interface
+func (user *UserImpl) Store(db *sql.DB, query string) error {
+	stmt, err := db.Prepare(query)
 	if err != nil {
-		return nil, err
+		return err
 	}
 	defer stmt.Close()
 
-	// Encrypt password before saving it
-	hashPassword, err := bcrypt.GenerateFromPassword([]byte(form.Password), bcrypt.DefaultCost)
-
+	hashPassword, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
 	if err != nil {
-		return nil, err
+		return err
 	}
-	res, err := stmt.Exec(form.Username, form.Email, string(hashPassword))
-
-	if err != nil {
-		return nil, err
-	}
-
-	return res, nil
+	_, err = stmt.Exec(user.Username, user.Email, string(hashPassword))
+	return err
 }
 
 // Exists check if a user exists
-func Exists(user mdl.User) bool {
+func Exists(user model.User) bool {
 	res, err := GetUserByUsernameAndPassword(user)
 	if err != nil {
 		return false

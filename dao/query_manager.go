@@ -28,7 +28,7 @@ func PrepareQuery(fileLocation string) string {
 	// Get working directory to find the sql file
 	wd, _ := os.Getwd()
 	sql, err := GetQuery(wd + fileLocation)
-	errs.CheckError(err, "Enable to read the file containing the query")
+	errs.CheckError(err, "Enable to read the file located at : "+fileLocation)
 	return sql
 }
 

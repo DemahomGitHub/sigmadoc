@@ -4,7 +4,13 @@ import (
 	"sigmadoc/model"
 )
 
-// FindAllDocuments retreive all documents from the DB
-func FindAllDocuments() []model.Document {
-	return nil
+const createDocumentFile string = "/sql/create_doc.sql"
+
+// CreateDocument :
+func CreateDocument(doc model.Document) {
+	db := OpenDatabase()
+	defer db.Close()
+
+	// sql := PrepareQuery(createDocumentFile)
+
 }
